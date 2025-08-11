@@ -1,0 +1,37 @@
+.footer {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.8);
+    padding: 2rem 0;
+    margin-top: auto;
+    position: relative;
+    z-index: 10;
+  }
+  
+  .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    text-align: center;
+  }
+  
+  .footer-text {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  
+  @media (max-width: 768px) {
+    .footer {
+      padding: 1.5rem 0;
+    }
+    
+    .footer-content {
+      padding: 0 1rem;
+    }
+    
+    .footer-text {
+      font-size: 0.9rem;
+    }
+  }
