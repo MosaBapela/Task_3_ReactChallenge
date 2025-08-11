@@ -1,11 +1,4 @@
-// Utility functions for safe localStorage operations
 
-/**
- * Safely get an item from localStorage
- * @param key - The key to retrieve
- * @param defaultValue - Default value if key doesn't exist or parsing fails
- * @returns Parsed value or default value
- */
 export function getFromStorage<T>(key: string, defaultValue: T): T {
     try {
       const item = localStorage.getItem(key);
@@ -19,12 +12,7 @@ export function getFromStorage<T>(key: string, defaultValue: T): T {
     }
   }
   
-  /**
-   * Safely set an item in localStorage
-   * @param key - The key to set
-   * @param value - The value to store
-   * @returns boolean indicating success
-   */
+
   export function setInStorage<T>(key: string, value: T): boolean {
     try {
       localStorage.setItem(key, JSON.stringify(value));
@@ -35,11 +23,7 @@ export function getFromStorage<T>(key: string, defaultValue: T): T {
     }
   }
   
-  /**
-   * Safely remove an item from localStorage
-   * @param key - The key to remove
-   * @returns boolean indicating success
-   */
+
   export function removeFromStorage(key: string): boolean {
     try {
       localStorage.removeItem(key);
@@ -50,10 +34,7 @@ export function getFromStorage<T>(key: string, defaultValue: T): T {
     }
   }
   
-  /**
-   * Clear all localStorage data for the app
-   * This removes all job tracker related data
-   */
+
   export function clearAllAppData(): void {
     try {
       const keys = Object.keys(localStorage);
@@ -67,10 +48,7 @@ export function getFromStorage<T>(key: string, defaultValue: T): T {
     }
   }
   
-  /**
-   * Check if localStorage is available
-   * @returns boolean indicating if localStorage is supported
-   */
+
   export function isLocalStorageAvailable(): boolean {
     try {
       const testKey = '__localStorage_test__';
@@ -82,7 +60,7 @@ export function getFromStorage<T>(key: string, defaultValue: T): T {
     }
   }
   
-  // Storage keys used throughout the app
+
   export const STORAGE_KEYS = {
     USERS: 'job_tracker_users',
     CURRENT_USER: 'job_tracker_current_user',
