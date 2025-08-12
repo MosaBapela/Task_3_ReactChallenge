@@ -1,0 +1,45 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "demo",
+      "password": "demo123"
+    },
+    {
+      "id": "cedf",
+      "username": "Mosaman",
+      "password": "123456789"
+    },
+    {
+      "id": "28a7",
+      "username": "Taleman",
+      "password": "123"
+    }
+  ],
+  "jobs": [
+    {
+      "id": "1",
+      "company": "Tech Corp",
+      "position": "Frontend Developer",
+      "status": "Applied",
+      "userId": 1,
+      "createdAt": "2024-01-15T10:30:00.000Z"
+    },
+    {
+      "id": "d830",
+      "company": "Shoprite",
+      "position": "Cleaner",
+      "status": "Applied",
+      "userId": "1",
+      "createdAt": "2025-08-12T07:52:34.367Z"
+    },
+    {
+      "id": "0249",
+      "company": "MR Price",
+      "position": "Cashier",
+      "status": "Accepted",
+      "userId": "cedf",
+      "createdAt": "2025-08-12T07:53:57.318Z"
+    }
+  ]
+}

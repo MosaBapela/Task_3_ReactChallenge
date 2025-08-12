@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../../Context/AuthContext";
 import JobForm from "../../Components/JobForm/JobForm";
 import JobCard from "../../Components/JobCard/JobCard";
+import { jobService } from "../../Services/JobService";
 
 import "./Dashboard.css";
 import type { Job, JobFormData } from "../../Types/Job";
-import { jobStorageService } from "../../Types/JobStorageService";
 
 const Dashboard: React.FC = () => {
   const auth = useAuth();
@@ -13,73 +13,78 @@ const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingJob, setEditingJob] = useState<Job | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Load jobs when component mounts or user changes
   useEffect(() => {
-    if (auth.user) {
-      setLoading(true);
-      try {
-        const userJobs = jobStorageService.getJobsForUser(auth.user.username);
-        setJobs(userJobs);
-      } catch (error) {
-        console.error('Error loading jobs:', error);
+    const loadJobs = async () => {
+      if (auth.user && !auth.loading) {
+        setLoading(true);
+        setError(null);
+        try {
+          const userJobs = await jobService.getJobsForUser(auth.user.id);
+          setJobs(userJobs);
+        } catch (error) {
+          console.error('Error loading jobs:', error);
+          setError('Failed to load jobs. Please try again.');
+          setJobs([]);
+        } finally {
+          setLoading(false);
+        }
+      } else if (!auth.loading) {
         setJobs([]);
-      } finally {
         setLoading(false);
       }
-    } else {
-      setJobs([]);
-      setLoading(false);
-    }
-  }, [auth.user]);
+    };
 
-  const handleAddJob = (jobData: JobFormData) => {
+    loadJobs();
+  }, [auth.user, auth.loading]);
+
+  const handleAddJob = async (jobData: JobFormData) => {
     if (!auth.user) return;
 
     try {
-      const newJob = jobStorageService.addJob(jobData, auth.user.username);
+      setError(null);
+      const newJob = await jobService.addJob(jobData, auth.user.id);
       setJobs(prevJobs => [...prevJobs, newJob]);
       setIsFormOpen(false);
     } catch (error) {
       console.error('Error adding job:', error);
+      setError('Failed to add job. Please try again.');
     }
   };
 
-  const handleUpdateJob = (jobData: Job) => {
+  const handleUpdateJob = async (jobData: Job) => {
     if (!auth.user) return;
 
     try {
-      const updatedJob = jobStorageService.updateJob(
-        jobData.id, 
-        {
-          company: jobData.company,
-          position: jobData.position,
-          status: jobData.status
-        }, 
-        auth.user.username
-      );
+      setError(null);
+      const updatedJob = await jobService.updateJob(jobData.id, {
+        company: jobData.company,
+        position: jobData.position,
+        status: jobData.status
+      });
 
-      if (updatedJob) {
-        setJobs(prevJobs => 
-          prevJobs.map(job => job.id === updatedJob.id ? updatedJob : job)
-        );
-      }
+      setJobs(prevJobs => 
+        prevJobs.map(job => job.id === updatedJob.id ? updatedJob : job)
+      );
       setEditingJob(null);
     } catch (error) {
       console.error('Error updating job:', error);
+      setError('Failed to update job. Please try again.');
     }
   };
 
-  const handleDeleteJob = (jobId: number) => {
+  const handleDeleteJob = async (jobId: number) => {
     if (!auth.user) return;
 
     try {
-      const success = jobStorageService.deleteJob(jobId, auth.user.username);
-      if (success) {
-        setJobs(prevJobs => prevJobs.filter(job => job.id !== jobId));
-      }
+      setError(null);
+      await jobService.deleteJob(jobId);
+      setJobs(prevJobs => prevJobs.filter(job => job.id !== jobId));
     } catch (error) {
       console.error('Error deleting job:', error);
+      setError('Failed to delete job. Please try again.');
     }
   };
 
@@ -106,7 +111,7 @@ const Dashboard: React.FC = () => {
     setIsFormOpen(true);
   };
 
-  if (loading) {
+  if (auth.loading || loading) {
     return (
       <div className="dashboard-container">
         <div className="dashboard-loading">Loading your jobs...</div>
@@ -127,6 +132,13 @@ const Dashboard: React.FC = () => {
             Add New Job
           </button>
         </div>
+
+        {error && (
+          <div className="dashboard-error">
+            <p>{error}</p>
+            <button onClick={() => setError(null)}>Dismiss</button>
+          </div>
+        )}
 
         {(isFormOpen || editingJob) && (
           <JobForm

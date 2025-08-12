@@ -10,16 +10,17 @@ const LoginPage: React.FC = () => {
   const auth = useAuth();
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    const success = auth.login(username, password);
+    // Use async/await here
+    const success = await auth.login(username, password);
     if (success) {
       navigate("/home");
     } else {
       setError("Invalid username or password.");
     }
-  };
+};
 
   return (
     <div className="login-page">
