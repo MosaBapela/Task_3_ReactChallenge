@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useAuth } from "../../Context/AuthContext";
 import JobForm from "../../Components/JobForm/JobForm";
 import JobCard from "../../Components/JobCard/JobCard";
+import SearchAndFilter from "../../Components/SearchAndFilter/SearchAndFilter";
 import { jobService } from "../../Services/JobService";
 
 import "./Dashboard.css";
@@ -14,6 +15,12 @@ const Dashboard: React.FC = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingJob, setEditingJob] = useState<Job | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Search and filter state
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [sortBy, setSortBy] = useState("dateAdded");
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   // Load jobs when component mounts or user changes
   useEffect(() => {
@@ -39,6 +46,52 @@ const Dashboard: React.FC = () => {
 
     loadJobs();
   }, [auth.user, auth.loading]);
+
+  // Filter and sort jobs based on search term, status filter, and sort options
+  const filteredAndSortedJobs = useMemo(() => {
+    let filtered = jobs;
+
+    // Apply search filter
+    if (searchTerm.trim()) {
+      const searchLower = searchTerm.toLowerCase().trim();
+      filtered = filtered.filter(job => 
+        job.company.toLowerCase().includes(searchLower) ||
+        job.position.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // Apply status filter
+    if (statusFilter !== "All") {
+      filtered = filtered.filter(job => job.status === statusFilter);
+    }
+
+    // Apply sorting
+    const sorted = [...filtered].sort((a, b) => {
+      let comparison = 0;
+      
+      switch (sortBy) {
+        case "company":
+          comparison = a.company.localeCompare(b.company);
+          break;
+        case "position":
+          comparison = a.position.localeCompare(b.position);
+          break;
+        case "status":
+          comparison = a.status.localeCompare(b.status);
+          break;
+        case "dateAdded":
+          // Sort by ID as a proxy for date added (assuming newer jobs have higher IDs)
+          comparison = a.id - b.id;
+          break;
+        default:
+          comparison = 0;
+      }
+
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
+
+    return sorted;
+  }, [jobs, searchTerm, statusFilter, sortBy, sortOrder]);
 
   const handleAddJob = async (jobData: JobFormData) => {
     if (!auth.user) return;
@@ -119,6 +172,8 @@ const Dashboard: React.FC = () => {
     );
   }
 
+  const hasActiveFilters = searchTerm.trim() || statusFilter !== "All" || sortBy !== "dateAdded" || sortOrder !== "desc";
+
   return (
     <div className="dashboard-container">
       <div className="dashboard-inner">
@@ -140,6 +195,33 @@ const Dashboard: React.FC = () => {
           </div>
         )}
 
+        {/* Search and Filter Component */}
+        {jobs.length > 0 && (
+          <>
+            <SearchAndFilter
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              statusFilter={statusFilter}
+              onStatusFilterChange={setStatusFilter}
+              sortBy={sortBy}
+              onSortChange={setSortBy}
+              sortOrder={sortOrder}
+              onSortOrderChange={setSortOrder}
+            />
+
+            {/* Results Summary */}
+            {(hasActiveFilters || filteredAndSortedJobs.length !== jobs.length) && (
+              <div className="search-results-summary">
+                <p>
+                  Showing {filteredAndSortedJobs.length} of {jobs.length} job applications
+                  {searchTerm && ` matching "${searchTerm}"`}
+                  {statusFilter !== "All" && ` with status "${statusFilter}"`}
+                </p>
+              </div>
+            )}
+          </>
+        )}
+
         {(isFormOpen || editingJob) && (
           <JobForm
             job={editingJob}
@@ -149,16 +231,23 @@ const Dashboard: React.FC = () => {
         )}
 
         {jobs.length > 0 ? (
-          <div className="dashboard-jobs-list">
-            {jobs.map((job) => (
-              <JobCard
-                key={job.id}
-                job={job}
-                onEdit={handleEditJob}
-                onDelete={handleDeleteJob}
-              />
-            ))}
-          </div>
+          filteredAndSortedJobs.length > 0 ? (
+            <div className="dashboard-jobs-list">
+              {filteredAndSortedJobs.map((job) => (
+                <JobCard
+                  key={job.id}
+                  job={job}
+                  onEdit={handleEditJob}
+                  onDelete={handleDeleteJob}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="dashboard-no-results">
+              <p>No jobs match your current search and filter criteria.</p>
+              <p>Try adjusting your search term or filters to see more results.</p>
+            </div>
+          )
         ) : (
           <div className="dashboard-no-jobs">
             <p>You haven't added any job applications yet.</p>

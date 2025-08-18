@@ -4,7 +4,26 @@ export interface Job {
   position: string;
   status: "Applied" | "Interviewed" | "Rejected" | "Offer" | "Accepted";
   userId: number;
-  createdAt: string;
+  dateAdded?: string; // ISO date string
 }
 
-export type JobFormData = Omit<Job, "id" | "userId" | "createdAt">;
+export interface JobFormData {
+  company: string;
+  position: string;
+  status: "Applied" | "Interviewed" | "Rejected" | "Offer" | "Accepted";
+}
+
+export interface JobUpdateData {
+  company: string;
+  position: string;
+  status: "Applied" | "Interviewed" | "Rejected" | "Offer" | "Accepted";
+}
+
+export type JobStatus = Job["status"];
+
+export interface JobFilterOptions {
+  searchTerm: string;
+  statusFilter: string;
+  sortBy: string;
+  sortOrder: 'asc' | 'desc';
+}
