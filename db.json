@@ -1,0 +1,77 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "demo",
+      "password": "demo123"
+    },
+    {
+      "id": "cedf",
+      "username": "Mosaman",
+      "password": "123456789"
+    },
+    {
+      "id": "28a7",
+      "username": "Taleman",
+      "password": "123"
+    }
+  ],
+  "jobs": [
+    {
+      "id": "1",
+      "company": "Tech Corp",
+      "position": "Frontend Developer",
+      "status": "Applied",
+      "userId": 1,
+      "createdAt": "2024-01-15T10:30:00.000Z"
+    },
+    {
+      "id": "d830",
+      "company": "Shoprite",
+      "position": "Cleaner",
+      "status": "Applied",
+      "userId": "1",
+      "createdAt": "2025-08-12T07:52:34.367Z"
+    },
+    {
+      "id": "0249",
+      "company": "MR Price",
+      "position": "Cashier",
+      "status": "Accepted",
+      "userId": "cedf",
+      "createdAt": "2025-08-12T07:53:57.318Z"
+    },
+    {
+      "id": "f7ab",
+      "company": "TUT",
+      "position": "Junior Facilitator",
+      "status": "Interviewed",
+      "userId": "cedf",
+      "createdAt": "2025-08-18T08:06:17.412Z"
+    },
+    {
+      "id": "0d9f",
+      "company": "TUT",
+      "position": "Junior Facilitator",
+      "status": "Interviewed",
+      "userId": "28a7",
+      "createdAt": "2025-08-18T08:32:01.075Z"
+    },
+    {
+      "id": "317e",
+      "company": "FrontEndDevs",
+      "position": "Software Developer",
+      "status": "Applied",
+      "userId": "28a7",
+      "createdAt": "2025-08-18T08:32:11.895Z"
+    },
+    {
+      "id": "4597",
+      "company": "Ackermans",
+      "position": "Cashier",
+      "status": "Applied",
+      "userId": "28a7",
+      "createdAt": "2025-08-18T08:32:32.586Z"
+    }
+  ]
+}

@@ -10,11 +10,11 @@ const RegistrationPage: React.FC = () => {
   const auth = useAuth();
   const navigate = useNavigate();
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     const success = auth.register(username, password);
-    if (success) {
+    if (await success) {
       navigate("/home");
     } else {
       setError("Username already exists. Please choose another one.");

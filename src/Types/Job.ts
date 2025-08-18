@@ -3,8 +3,27 @@ export interface Job {
   company: string;
   position: string;
   status: "Applied" | "Interviewed" | "Rejected" | "Offer" | "Accepted";
-  userId: string; // Add userId to associate jobs with users
-  createdAt: string; // Add timestamp for better data management
+  userId: number;
+  dateAdded?: string; // ISO date string
 }
 
-export type JobFormData = Omit<Job, "id" | "userId" | "createdAt">;
+export interface JobFormData {
+  company: string;
+  position: string;
+  status: "Applied" | "Interviewed" | "Rejected" | "Offer" | "Accepted";
+}
+
+export interface JobUpdateData {
+  company: string;
+  position: string;
+  status: "Applied" | "Interviewed" | "Rejected" | "Offer" | "Accepted";
+}
+
+export type JobStatus = Job["status"];
+
+export interface JobFilterOptions {
+  searchTerm: string;
+  statusFilter: string;
+  sortBy: string;
+  sortOrder: 'asc' | 'desc';
+}
