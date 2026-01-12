@@ -14,6 +14,11 @@
       "id": "28a7",
       "username": "Taleman",
       "password": "123"
+    },
+    {
+      "id": "74f8",
+      "username": "mrbean@gmail.com",
+      "password": "123"
     }
   ],
   "jobs": [
@@ -72,6 +77,46 @@
       "status": "Applied",
       "userId": "28a7",
       "createdAt": "2025-08-18T08:32:32.586Z"
+    },
+    {
+      "id": "d93b",
+      "company": "MLab",
+      "position": "Software Dev",
+      "status": "Applied",
+      "userId": "74f8",
+      "createdAt": "2026-01-12T12:13:04.899Z"
+    },
+    {
+      "id": "64f4",
+      "company": "Shoprite",
+      "position": "Cashier",
+      "status": "Applied",
+      "userId": "74f8",
+      "createdAt": "2026-01-12T12:13:38.154Z"
+    },
+    {
+      "id": "a8ef",
+      "company": "BCX",
+      "position": "IT Supporter",
+      "status": "Interviewed",
+      "userId": "74f8",
+      "createdAt": "2026-01-12T12:14:57.279Z"
+    },
+    {
+      "id": "067a",
+      "company": "Tshwane University Of Technology",
+      "position": "Lecture",
+      "status": "Applied",
+      "userId": "74f8",
+      "createdAt": "2026-01-12T12:15:29.744Z"
+    },
+    {
+      "id": "ac60",
+      "company": "Ackermans",
+      "position": "Cleaner",
+      "status": "Applied",
+      "userId": "74f8",
+      "createdAt": "2026-01-12T12:15:44.622Z"
     }
   ]
 }

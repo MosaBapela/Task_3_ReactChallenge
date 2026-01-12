@@ -1,4 +1,6 @@
-const API_BASE_URL = 'http://localhost:3000';
+// json-server in this project is started on port 3001 (see package.json scripts).
+// Keep this in sync with the server script or replace with an env var (Vite: import.meta.env.VITE_API_BASE_URL).
+const API_BASE_URL = 'http://localhost:3001';
 
 class ApiService {
   private baseUrl: string;
