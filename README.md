@@ -1,69 +1,76 @@
-# React + TypeScript + Vite
+# Job Tracker — React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Small React + TypeScript app (Vite). Uses a local json-server (`db.json`) as a lightweight dev API for users and jobs.
 
-Currently, two official plugins are available:
+## Quick start
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Install dependencies:
 
-## Expanding the ESLint configuration
+   ```powershell
+   npm install
+   ```
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+2. Start the backend (json-server):
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+   ```powershell
+   npm run server
+   ```
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+3. In a second terminal start the frontend (Vite):
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+   ```powershell
+   npm run dev
+   ```
+
+   Or run both together:
+
+   ```powershell
+   npm run dev:full
+   ```
+
+Open the URL shown by Vite (usually `http://localhost:5173`).
+
+## What the scripts do
+
+- `npm run server` — starts json-server and serves `db.json` (default port: 3001)
+- `npm run dev` — starts Vite (frontend)
+- `npm run dev:full` — runs both concurrently
+- `npm run build` — build frontend for production
+
+## Verify the API
+
+After `npm run server`, verify the users endpoint:
+
+```powershell
+Invoke-RestMethod http://localhost:3001/users
+# or
+curl http://localhost:3001/users
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+You should see the `users` array from `db.json`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Common problem & quick fix
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+If registration/login fails and console shows `Failed to fetch` or `ERR_CONNECTION_REFUSED` to `http://localhost:3000`:
+
+- Reason: the frontend was trying to call port **3000** while json-server runs on **3001** (or the server isn't running).
+- Fix: start the server (`npm run server`) and ensure the frontend's API base URL matches the server port.
+
+API config lives at: `src/Services/ApiServices.ts` (default: `http://localhost:3001`).
+
+## Make API URL configurable (optional)
+
+You can add a `.env` / `.env.local` with:
+
 ```
+VITE_API_BASE_URL=http://localhost:3001
+```
+
+and update `ApiServices.ts` to use `import.meta.env.VITE_API_BASE_URL` for flexibility.
+
+## Notes
+
+- `db.json` contains sample users and jobs for development.
+- `json-server` is for local development only — replace it with a real API in production.
+
+If you want, I can make the API URL use Vite env variables and add a `.env.example` file.

@@ -13,11 +13,15 @@ const RegistrationPage: React.FC = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    const success = auth.register(username, password);
-    if (await success) {
+
+    // await the promise from auth.register (was previously stored as a promise and awaited later)
+    const success = await auth.register(username, password);
+
+    if (success) {
       navigate("/home");
     } else {
-      setError("Username already exists. Please choose another one.");
+      // Provide a broader message since registration can fail for multiple reasons
+      setError("Registration failed. Username may already exist or the server is unavailable.");
     }
   };
 
